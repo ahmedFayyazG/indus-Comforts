@@ -19,9 +19,28 @@ export default function Home() {
   const [menu, setMenu] = useState(false);
   const filters = ['All pieces', 'Sofas', 'Modular', 'Armchairs'];
   const visible = useMemo(() => active === 'All pieces' ? products : products.filter(p => p.type === active), [active]);
+  const catalogData = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Indus Comforts furniture collection',
+    itemListElement: products.map((product, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Product',
+        name: product.name,
+        category: product.type,
+        description: product.desc,
+        image: product.image,
+        brand: { '@type': 'Brand', name: 'Indus Comforts' },
+        offers: { '@type': 'Offer', priceCurrency: 'GBP', price: product.price.replace('£', '').replace(',', ''), availability: 'https://schema.org/InStock', url: 'https://induscomforts.co.uk/#shop' },
+      },
+    })),
+  };
 
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(catalogData) }} />
       <div className="announcement">Free fabric samples, delivered to your door <span>·</span> Delivery across mainland UK</div>
       <header className="nav-wrap">
         <nav className="nav" aria-label="Main navigation">
